@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Howl, Howler } from "howler";
 import Switcher12 from "./Switcher12";
 
@@ -99,6 +99,28 @@ function App() {
   const toggleMode = (checked) => {
     setIsLayering(checked);
   };
+
+  useEffect(() => {
+    const handleKeyPress = (event) => {
+      const keyMap = {
+        'a': 0, 's': 1, 'd': 2, 'f': 3,
+        'g': 4, 'h': 5, 'j': 6, 'k': 7,
+        'l': 8, ';': 9, '\'': 10, 'z': 11,
+        'x': 12, 'c': 13, 'v': 14, 'b': 15
+      };
+
+      const index = keyMap[event.key.toLowerCase()]; // Map key to index
+      if (index !== undefined) {
+        handleSquareClick(index); // Trigger click
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress); // Add event listener
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress); // Cleanup
+    };
+  }, [isLayering]); // Cleanup when unmounted or when `isLayering` changes
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
