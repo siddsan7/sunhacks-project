@@ -1,101 +1,115 @@
 import React, { useState, useEffect } from "react";
-import { Howl, Howler } from "howler";
+import { Howl } from "howler";
 import Switcher12 from "./Switcher12";
 
-const squareTexts = [
-  'Kick', 'Snare', 'Hi-Hat', 'Tom',
-  'Cymbal', 'Clap', 'Percussion', 'FX',
-  'Bass', 'Lead', 'Pad', 'Arp',
-  'Vocal', 'Chords', 'String', 'Pluck'
-];
-
+// Square Texts
 const squareTextsLayered = [
-  'Beat 1', 'Beat 2', 'Beat 3', 'Beat 4',
-  'Sub bass 1', 'Sub bass 2', 'Sub bass 3', 'Sub bass 4',
-  'Synth 1', 'Synth 2', 'Synth 3', 'Synth 4',
-  'Vocal 1', 'Vocal 2', 'Vocal 3', 'Vocal 4'
+  ["Beat 1", "Beat 2", "Beat 3", "Beat 4"],
+  ["Sub bass 1", "Sub bass 2", "Sub bass 3", "Sub bass 4"],
+  ["Synth 1", "Synth 2", "Synth 3", "Synth 4"],
+  ["Vocal 1", "Vocal 2", "Vocal 3", "Vocal 4"]
 ];
 
-const audioSources = ['/PROJECT STEMS/TRUVONNE STEMS for Class 2022-2023/Drum Loops/Freeze 1-Drum Rack [2022-10-15 095511].wav', '/PROJECT STEMS/TRUVONNE STEMS for Class 2022-2023/Drum Loops/Freeze 1-Drum Rack [2022-10-15 095544].wav', '/PROJECT STEMS/TRUVONNE STEMS for Class 2022-2023/Drum Loops/Freeze 1-Drum Rack [2022-10-15 095607].wav', '/PROJECT STEMS/TRUVONNE STEMS for Class 2022-2023/Drum Loops/Freeze 1-Drum Rack [2022-10-15 095617].wav', '/PROJECT STEMS/TRUVONNE STEMS for Class 2022-2023/Sub-Bass Loops/Freeze 9-3 OP Boom [2022-10-15 095516].wav', '/PROJECT STEMS/TRUVONNE STEMS for Class 2022-2023/Sub-Bass Loops/Freeze 9-3 OP Boom [2022-10-15 095544].wav', '/PROJECT STEMS/TRUVONNE STEMS for Class 2022-2023/Sub-Bass Loops/Freeze 9-3 OP Boom [2022-10-15 095607].wav', '/PROJECT STEMS/TRUVONNE STEMS for Class 2022-2023/Sub-Bass Loops/Freeze 9-3 OP Boom [2022-10-15 095617].wav', '/PROJECT STEMS/TRUVONNE STEMS for Class 2022-2023/Synth Loops/Freeze 2-Troposphere Pad [2022-10-15 095508]-1.wav', '/PROJECT STEMS/TRUVONNE STEMS for Class 2022-2023/Synth Loops/Freeze 2-Troposphere Pad [2022-10-15 095544].wav', '/PROJECT STEMS/TRUVONNE STEMS for Class 2022-2023/Synth Loops/Freeze 2-Troposphere Pad [2022-10-15 095607].wav', '/PROJECT STEMS/TRUVONNE STEMS for Class 2022-2023/Synth Loops/Freeze 2-Troposphere Pad [2022-10-15 095617].wav', '/PROJECT STEMS/TRUVONNE STEMS for Class 2022-2023/Vocal Loops/Freeze 4-Arcade [2022-10-15 095508]-1.wav', '/PROJECT STEMS/TRUVONNE STEMS for Class 2022-2023/Vocal Loops/Freeze 4-Arcade [2022-10-15 095544].wav', '/PROJECT STEMS/TRUVONNE STEMS for Class 2022-2023/Vocal Loops/Freeze 4-Arcade [2022-10-15 095607].wav', '/PROJECT STEMS/TRUVONNE STEMS for Class 2022-2023/Vocal Loops/Freeze 7-Freeze 3-Arcade [2022-10-15 095508].wav']; // Fill this with your audio sources
+const audioSources = ['/PROJECT STEMS/TRUVONNE STEMS for Class 2022-2023/Drum Loops/Freeze 1-Drum Rack [2022-10-15 095511].wav', '/PROJECT STEMS/TRUVONNE STEMS for Class 2022-2023/Drum Loops/Freeze 1-Drum Rack [2022-10-15 095544].wav', '/PROJECT STEMS/TRUVONNE STEMS for Class 2022-2023/Drum Loops/Freeze 1-Drum Rack [2022-10-15 095607].wav', '/PROJECT STEMS/TRUVONNE STEMS for Class 2022-2023/Drum Loops/Freeze 1-Drum Rack [2022-10-15 095617].wav', '/PROJECT STEMS/TRUVONNE STEMS for Class 2022-2023/Sub-Bass Loops/Freeze 9-3 OP Boom [2022-10-15 095516].wav', '/PROJECT STEMS/TRUVONNE STEMS for Class 2022-2023/Sub-Bass Loops/Freeze 9-3 OP Boom [2022-10-15 095544].wav', '/PROJECT STEMS/TRUVONNE STEMS for Class 2022-2023/Sub-Bass Loops/Freeze 9-3 OP Boom [2022-10-15 095607].wav', '/PROJECT STEMS/TRUVONNE STEMS for Class 2022-2023/Sub-Bass Loops/Freeze 9-3 OP Boom [2022-10-15 095617].wav', '/PROJECT STEMS/TRUVONNE STEMS for Class 2022-2023/Synth Loops/Freeze 2-Troposphere Pad [2022-10-15 095508]-1.wav', '/PROJECT STEMS/TRUVONNE STEMS for Class 2022-2023/Synth Loops/Freeze 2-Troposphere Pad [2022-10-15 095544].wav', '/PROJECT STEMS/TRUVONNE STEMS for Class 2022-2023/Synth Loops/Freeze 2-Troposphere Pad [2022-10-15 095607].wav', '/PROJECT STEMS/TRUVONNE STEMS for Class 2022-2023/Synth Loops/Freeze 2-Troposphere Pad [2022-10-15 095617].wav', '/PROJECT STEMS/TRUVONNE STEMS for Class 2022-2023/Vocal Loops/Freeze 4-Arcade [2022-10-15 095508]-1.wav', '/PROJECT STEMS/TRUVONNE STEMS for Class 2022-2023/Vocal Loops/Freeze 4-Arcade [2022-10-15 095544].wav', '/PROJECT STEMS/TRUVONNE STEMS for Class 2022-2023/Vocal Loops/Freeze 4-Arcade [2022-10-15 095607].wav', '/PROJECT STEMS/TRUVONNE STEMS for Class 2022-2023/Vocal Loops/Freeze 7-Freeze 3-Arcade [2022-10-15 095617].wav']; // Fill this with your audio sources
 
+// Function to generate colors for the squares
 const getCustomColor = (index) => {
-  const colors = [
-    "#FF5733", "#FF5733", "#FF5733", "#FF5733",
-    "#33C4FF", "#33C4FF", "#33C4FF", "#33C4FF",
-    "#75FF33", "#75FF33", "#75FF33", "#75FF33",
-    "#FFC300", "#FFC300", "#FFC300", "#FFC300",
-  ];
+  const colors = ["#FF5733", "#33C4FF", "#75FF33", "#FFC300"];
   return colors[index % colors.length];
 };
 
-const OneShotBeatpad = ({ handleSquareClick }) => (
-  <div className="grid grid-cols-4 gap-6">
-    {Array.from({ length: 16 }).map((_, index) => (
-      <div
-        key={index}
-        data-index={index}
-        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#909699"} // Hover color
-        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = getCustomColor(index)} // Reset color
-        onClick={() => handleSquareClick(index)}
-        style={{ backgroundColor: getCustomColor(index) }}
-        className="h-36 w-36 rounded-lg shadow-md flex items-center justify-center transform transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-xl" // Added hover styles
-      >
-        <span className="text-center text-xl text-black pointer-events-none">
-          {squareTexts[index]}
-        </span>
-      </div>
-    ))}
-  </div>
-);
+// LayeringBeatpad Component
+const LayeringBeatpad = ({ handleSquareClick, toggleRowLayering, rowLayering, isLayering }) => (
+  <div>
+    {squareTextsLayered.map((row, rowIndex) => (
+      <div key={rowIndex} className="flex mb-4 items-center">
+        <div className="grid grid-cols-4 gap-6">
+          {row.map((text, colIndex) => {
+            const index = rowIndex * 4 + colIndex;
+            return (
+              <div
+                key={index}
+                data-index={index}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#909699")} // Hover color
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = getCustomColor(rowIndex))} // Reset color
+                onClick={() => handleSquareClick(index, rowIndex)}
+                style={{ backgroundColor: getCustomColor(rowIndex) }}
+                className="h-36 w-36 rounded-lg shadow-md flex items-center justify-center transform transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-xl"
+              >
+                <span className="text-center text-xl text-black pointer-events-none">
+                  {text}
+                </span>
+              </div>
+            );
+          })}
+        </div>
 
-const LayeringBeatpad = ({ handleSquareClick }) => (
-  <div className="grid grid-cols-4 gap-6">
-    {Array.from({ length: 16 }).map((_, index) => (
-      <div
-        key={index}
-        data-index={index}
-        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#909699"} // Hover color
-        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = getCustomColor(index)} // Reset color
-        onClick={() => handleSquareClick(index)}
-        style={{ backgroundColor: getCustomColor(index) }}
-        className="h-36 w-36 rounded-lg shadow-md flex items-center justify-center transform transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-xl" // Added hover styles
-      >
-        <span className="text-center text-xl text-black pointer-events-none">
-          {squareTextsLayered[index]}
-        </span>
+        {/* Conditionally render the row switcher when in layering mode */}
+        {isLayering && (
+          <div className="ml-4">
+            <Switcher12
+              onToggle={() => toggleRowLayering(rowIndex)} // Toggle layering for each row
+              isChecked={rowLayering[rowIndex]} // Reflect the current state for the row
+            />
+          </div>
+        )}
       </div>
     ))}
   </div>
 );
 
 function App() {
-  const [isLayering, setIsLayering] = useState(false); // State for layering mode
+  const [isLayering, setIsLayering] = useState(false); // Overall layering toggle
+  const [rowLayering, setRowLayering] = useState([true, true, true, true]); // Row-specific layering
+  const [currentSound, setCurrentSound] = useState(null); // Currently playing sound for one-shot mode
 
-  const handleOneShotClick = (index) => {
-    Howler.stop(); // Stop all sounds
-    const sound = new Howl({
-      src: [audioSources[index]],
-      html5: true,
-    });
-    sound.play(); // Play the selected sound
-  };
+  const soundsByRow = {}; // Store currently playing sounds by row
 
-  
-
-  const handleLayeringClick = (index) => {
-    const sound = new Howl({
-      src: [audioSources[index]],
-      html5: true,
-    });
-    sound.play(); // Play the selected sound
-  };
-
-  const handleSquareClick = (index) => {
+  // Handle click for one-shot or layering behavior
+  const handleSquareClick = (index, rowIndex) => {
     if (isLayering) {
-      handleLayeringClick(index);
+      if (!rowLayering[rowIndex]) {
+        // Stop only the sounds playing in the current row (one-shot mode)
+        if (soundsByRow[rowIndex]) {
+          soundsByRow[rowIndex].forEach((sound) => sound.stop());
+        }
+        soundsByRow[rowIndex] = [];
+      }
+      playSound(index, rowIndex);
     } else {
-      handleOneShotClick(index);
+      // In one-shot mode: Stop currently playing sound
+      if (currentSound) {
+        currentSound.stop(); // Stop the currently playing sound
+      }
+      playSound(index); // Play the new sound
     }
+  };
+
+  const playSound = (index, rowIndex) => {
+    const sound = new Howl({
+      src: [audioSources[index]],
+      html5: true
+    });
+    sound.play();
+
+    // If in one-shot mode, keep track of the currently playing sound
+    if (!isLayering) {
+      setCurrentSound(sound);
+    } else {
+      // Track the sound by row
+      if (!soundsByRow[rowIndex]) {
+        soundsByRow[rowIndex] = [];
+      }
+      soundsByRow[rowIndex].push(sound); // Add sound to the row's playing list
+    }
+  };
+
+  const toggleRowLayering = (rowIndex) => {
+    setRowLayering((prevState) => {
+      const newRowLayering = [...prevState];
+      newRowLayering[rowIndex] = !newRowLayering[rowIndex]; // Toggle the state for the selected row
+      return newRowLayering;
+    });
   };
 
   const toggleMode = (checked) => {
@@ -105,39 +119,63 @@ function App() {
   useEffect(() => {
     const handleKeyPress = (event) => {
       const keyMap = {
-        'a': 0, 's': 1, 'd': 2, 'f': 3,
-        'g': 4, 'h': 5, 'j': 6, 'k': 7,
-        'l': 8, ';': 9, '\'': 10, 'z': 11,
-        'x': 12, 'c': 13, 'v': 14, 'b': 15
+        q: 0,
+        w: 1,
+        e: 2,
+        r: 3,
+        a: 4,
+        s: 5,
+        d: 6,
+        f: 7,
+        z: 8,
+        x: 9,
+        c: 10,
+        v:11,
+        u: 12,
+        i: 13,
+        o: 14,
+        p: 15
       };
 
-      const index = keyMap[event.key.toLowerCase()]; // Map key to index
+      const index = keyMap[event.key.toLowerCase()];
       if (index !== undefined) {
-        handleSquareClick(index); // Trigger click
+        if (!isLayering) {
+          // In One-Shot mode, stop the current sound if there is one
+          if (currentSound) {
+            currentSound.stop(); // Stop currently playing sound
+          }
+        }
+        // Calculate the row index
+        const rowIndex = Math.floor(index / 4);
+        handleSquareClick(index, rowIndex); // Pass both index and rowIndex
       }
     };
 
-    window.addEventListener('keydown', handleKeyPress); // Add event listener
+    window.addEventListener("keydown", handleKeyPress);
 
     return () => {
-      window.removeEventListener('keydown', handleKeyPress); // Cleanup
+      window.removeEventListener("keydown", handleKeyPress);
     };
-  }, [isLayering]); // Cleanup when unmounted or when `isLayering` changes
+  }, [isLayering, currentSound]); // Add currentSound to dependencies
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white rounded-xl shadow-lg p-16 relative">
-        {/* Toggle Switch for One Shot/Layering */}
-        <div className="absolute top-4 right-4 z-20">
-          <Switcher12 onToggle={toggleMode} />
+        {/* Toggle Switch for Overall One Shot/Layering */}
+        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 z-20">
+          <Switcher12
+            isChecked={isLayering} // Pass the global state
+            onToggle={toggleMode} // Pass the function that updates global mode
+          />
         </div>
 
-        {/* Render the appropriate beatpad based on the layering state */}
-        {isLayering ? (
-          <LayeringBeatpad handleSquareClick={handleSquareClick} />
-        ) : (
-          <OneShotBeatpad handleSquareClick={handleSquareClick} />
-        )}
+        {/* Render the LayeringBeatpad with row-specific toggling */}
+        <LayeringBeatpad
+          handleSquareClick={handleSquareClick}
+          toggleRowLayering={toggleRowLayering}
+          rowLayering={rowLayering}
+          isLayering={isLayering} // Pass the global mode to conditionally render the row switches
+        />
       </div>
     </div>
   );

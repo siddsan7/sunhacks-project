@@ -1,20 +1,12 @@
-// Switcher12.js
-import React, { useState } from 'react';
+import React from 'react';
 
-const Switcher12 = ({ onToggle }) => {
-  const [isChecked, setIsChecked] = useState(false);
-
-  const handleCheckboxChange = () => {
-    setIsChecked(!isChecked);
-    onToggle(!isChecked); // Notify the parent component
-  };
-
+const Switcher12 = ({ onToggle, isChecked }) => {
   return (
     <label className='themeSwitcherTwo relative inline-flex cursor-pointer select-none items-center'>
       <input
         type='checkbox'
-        checked={isChecked}
-        onChange={handleCheckboxChange}
+        checked={isChecked} // Use prop instead of internal state
+        onChange={(e) => onToggle(e.target.checked)} // Notify parent when toggled
         className='sr-only'
       />
       <span className='label flex items-center text-sm font-medium text-black'>
@@ -32,7 +24,7 @@ const Switcher12 = ({ onToggle }) => {
         ></span>
       </span>
       <span className='label flex items-center text-sm font-medium text-black'>
-        Layering
+        Layers
       </span>
     </label>
   );
