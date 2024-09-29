@@ -130,33 +130,38 @@ function App() {
         z: 8,
         x: 9,
         c: 10,
-        v:11,
+        v: 11,
         u: 12,
         i: 13,
         o: 14,
         p: 15
       };
-
+  
       const index = keyMap[event.key.toLowerCase()];
       if (index !== undefined) {
-        if (!isLayering) {
-          // In One-Shot mode, stop the current sound if there is one
+        // Calculate the row index
+        const rowIndex = Math.floor(index / 4);
+        
+        // Check if the row is in one-shot mode
+        if (!rowLayering[rowIndex]) {
+          // In one-shot mode, stop the current sound if there is one
           if (currentSound) {
             currentSound.stop(); // Stop currently playing sound
           }
         }
-        // Calculate the row index
-        const rowIndex = Math.floor(index / 4);
+        
+        // Call handleSquareClick regardless of mode
         handleSquareClick(index, rowIndex); // Pass both index and rowIndex
       }
     };
-
+  
     window.addEventListener("keydown", handleKeyPress);
-
+  
     return () => {
       window.removeEventListener("keydown", handleKeyPress);
     };
-  }, [isLayering, currentSound]); // Add currentSound to dependencies
+  }, [isLayering, currentSound, rowLayering]); // Add rowLayering to dependencies
+  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
