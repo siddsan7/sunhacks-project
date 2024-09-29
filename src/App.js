@@ -80,6 +80,8 @@ function App() {
     sound.play(); // Play the selected sound
   };
 
+  
+
   const handleLayeringClick = (index) => {
     const sound = new Howl({
       src: [audioSources[index]],
@@ -90,9 +92,9 @@ function App() {
 
   const handleSquareClick = (index) => {
     if (isLayering) {
-      handleLayeringClick(index); // Call layering click handler
+      handleLayeringClick(index);
     } else {
-      handleOneShotClick(index); // Call one-shot click handler
+      handleOneShotClick(index);
     }
   };
 
