@@ -8,27 +8,25 @@ const Navbar = () => {
           <img src={logo} alt="BeatPad" />
         </a>
         <div className="space-x-4">
-          <a
-            href="/"
-            className="hover:text-gray-400 transition-colors duration-300"
-          >
-            Home
-          </a>
+        
+        <a href="/" className="hover:bg-gray-700 hover:text-white transition-colors duration-500 p-8 rounded">
+          Home
+        </a>
           <a
             href="/about"
-            className="hover:text-gray-400 transition-colors duration-300"
+            className="hover:bg-gray-700 hover:text-white transition-colors duration-500 p-8 rounded"
           >
             About
           </a>
           <a
             href="/contact"
-            className="hover:text-gray-400 transition-colors duration-300"
+            className="hover:bg-gray-700 hover:text-white transition-colors duration-500 p-8 rounded"
           >
             Contact Us
           </a>
           <a
             href="/alternate"
-            className="hover:text-gray-400 transition-colors duration-300"
+            className="hover:bg-gray-700 hover:text-white transition-colors duration-500 p-8 rounded"
           >
             Alternate Versions
           </a>
